@@ -9,7 +9,9 @@ This code is not tied to any frameworks, only using the go standard library.
 
 
 ```
-    tracer := &Trace{
+    import "github.com/jdamick/go-http-instrument/instrument"
+
+    tracer := &instrument.Trace{
 		BeforeHandler: func(http.ResponseWriter, *http.Request) {
 			... Collect metrics here ...
 		},
@@ -18,7 +20,7 @@ This code is not tied to any frameworks, only using the go standard library.
 		},
 	}
 
-	h := Handler(tracer, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	h := instrument.Handler(tracer, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	}))
 
