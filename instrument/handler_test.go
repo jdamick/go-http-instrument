@@ -15,10 +15,21 @@ func TestHandlerEvents(t *testing.T) {
 	afterCalled := false
 
 	tracer := &Trace{
-		BeforeHandler: func(http.ResponseWriter, *http.Request) {
+		BeforeHandler: func(resp http.ResponseWriter, req *http.Request, info *TraceInfo) {
+			require.NotNil(t, info.Timestamp)
+			require.Equal(t, "get", info.Method)
+			require.True(t, info.RequestSizeBytes > 0)
+			require.Equal(t, int64(0), info.ResponseSizeBytes)
 			beforeCalled = true
 		},
-		AfterHandler: func(http.ResponseWriter, *http.Request, ResponseWriterDelegate) {
+		AfterHandler: func(resp http.ResponseWriter, req *http.Request, info *TraceInfo) {
+			require.NotNil(t, info.Timestamp)
+			require.Equal(t, "get", info.Method)
+			require.Equal(t, "200", info.StatusCode)
+			require.Equal(t, 200, info.Status)
+			require.True(t, info.RequestSizeBytes > 0)
+			require.True(t, info.ResponseSizeBytes > 0)
+
 			afterCalled = true
 		},
 	}
@@ -38,10 +49,10 @@ func TestHandlerEvents(t *testing.T) {
 
 func ExampleHandler() {
 	tracer := &Trace{
-		BeforeHandler: func(http.ResponseWriter, *http.Request) {
+		BeforeHandler: func(http.ResponseWriter, *http.Request, *TraceInfo) {
 			fmt.Printf("Before\n")
 		},
-		AfterHandler: func(http.ResponseWriter, *http.Request, ResponseWriterDelegate) {
+		AfterHandler: func(http.ResponseWriter, *http.Request, *TraceInfo) {
 			fmt.Printf("After\n")
 		},
 	}
