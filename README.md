@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jdamick/go-http-instrument.svg?branch=master)](https://travis-ci.org/jdamick/go-http-instrument)
+
 # HTTP Server Instrumentation
 
 Small utility to retrieve callbacks before and after a handler is called and includes 
